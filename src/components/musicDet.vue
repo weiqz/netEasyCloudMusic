@@ -3,7 +3,7 @@
           <div class="top-box">
               <div class="l-recordbox">
                   <div class="record-bg" ref="cdbg">
-                      <img :src="nowplaySong.imageUrl" alt="" srcset="">
+                      <img :src="nowplaySong.picUrl" alt="" srcset="">
                   </div>
                   <div class="record-poi" ref="poi"></div>
                   <div class="btn-group">
@@ -16,12 +16,12 @@
                   </div>
               </div>
               <div class="r-musicsmg">
-                  <h1>{{ nowplaySong.title }}</h1>
+                  <h1>{{ nowplaySong.name }}</h1>
                   <h5>
                       <span>专辑：</span>
-                      <router-link to="">{{ nowplaySong.album }}</router-link>
+                      <router-link to="">{{ nowplaySong.song.album.name }}</router-link>
                       <span>歌手：</span>
-                      <router-link to="">{{ nowplaySong.singer }}</router-link>
+                      <router-link to="">{{ nowplaySong.song.artists[0].name }}</router-link>
                       <span>来源：</span>
                       <router-link to=""></router-link>
                   </h5>
@@ -90,7 +90,7 @@
           </div>
           <button @click="changeDetShow" class="hideMusicDet"><i class="el-icon-bottom-left"></i></button>
           <div class="musicimgbg">
-              <img :src="nowplaySong.imageUrl" alt="" srcset="">
+              <img :src="nowplaySong.picUrl" alt="" srcset="">
           </div>
     </div>
 </template>
@@ -116,9 +116,6 @@ import axios from 'axios'
             if(this.playing){
                 this.setPoiAnimation(this.playing);
             }
-            axios.get('/album/newest').then(function (response) {
-                console.log(response);
-            })
         },
         methods:{
             setCdAnimation (){            
@@ -159,7 +156,7 @@ import axios from 'axios'
                     clearInterval(this.cdtimer)
                     this.setItv({
                         start:30,
-                        end:0,
+                        end:0, 
                         speed:-1
                     })
                 }

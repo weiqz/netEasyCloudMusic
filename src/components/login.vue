@@ -3,8 +3,7 @@
         <el-form-item prop="phone">
             <el-input 
                     placeholder="请输入手机号" 
-                    v-model="ruleForm.phone" 
-                    show-password
+                    v-model="ruleForm.phone"
                     prefix-icon="el-icon-mobile">
                 </el-input>
         </el-form-item>
@@ -24,6 +23,7 @@
 </template>
 
 <script>
+import { Login } from '../getData/request.js'
     export default {
         name:"login",
         data (){
@@ -35,7 +35,7 @@
                 rules:{
                     phone: [
                             { required: true, message: '请输入手机号', trigger: 'blur' },
-                            { min: 11,max:11,message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                            { min: 11,max:11,message: '请输入正确的手机号', trigger: 'blur' }
                         ],
                     pass:[{ required: true, message: '请输入密码', trigger: 'blur' }] 
                 }
@@ -51,7 +51,23 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        Login(this.ruleForm).then(function (res){
+                            let data = res.data;
+                            console.log(data)
+                            if(data.code===200){
+                                this.$message({
+                                    message: '登录成功！',
+                                    type: 'success'
+                                });
+                                this.$refs[formName].resetFields();
+                                this.$emit('update:visible', false);
+                                this.$store.commit('updateUserPro',data.profile);
+                                localStorage.userPro = JSON.stringify(data.profile);
+                            }else{
+                                 this.$message.error(data.msg);
+                            }
+                        }.bind(this)).catch(function (err){
+                        });
                     } else {
                         console.log('error submit!!');
                         return false;

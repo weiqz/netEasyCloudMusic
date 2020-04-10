@@ -29,10 +29,10 @@
         
         <!--  -->
         <div class="nowplay-box" @mouseover="changeNowPlayHover" @mouseout="changeNowPlayHover">
-            <img :src="nowplaySong.imageUrl" alt="" srcset="">
-            <div>
-                <span><a :title="nowplaySong.title">{{ nowplaySong.title }}</a><i class="div-icon-love-f nowloveico"></i></span>
-                <router-link to="" style="color:#777">{{nowplaySong.singer}}</router-link>
+            <img :src="nowplaySong.picUrl?nowplaySong.picUrl:null" alt="" srcset="">
+            <div v-if="nowplaySong.name">
+                <span><a :title="nowplaySong.name">{{ nowplaySong.name }}</a><i class="div-icon-love-f nowloveico"></i></span>
+                <router-link to="" style="color:#777">{{nowplaySong.song.artists[0].name}}</router-link>
             </div>
             <div class="nowplay-hover" v-show="nowplayh">
                 <router-link to="/musicdet"> 

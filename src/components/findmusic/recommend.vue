@@ -1,7 +1,7 @@
 <template>
     <div class="recommend">
         <el-carousel :interval="4000" type="card" height="200px">
-            <el-carousel-item v-for="item in bannerLists" :key="item.encodeId">
+            <el-carousel-item v-for="(item,index) in bannerLists" :key="'bnn'+index">
                 <div class="medium">
                     <img :src="item.imageUrl" alt="">
                     <span :style="{ background:item.titleColor }">{{ item.typeTitle }}</span>
@@ -11,49 +11,49 @@
         <div class="boxlists">
             <h3>推荐歌单<a href="javascript:void(0)">更多></a></h3>
             <ul class="nonewm">
-                <li v-for="item in personalized" :key="item.id">
+                <li v-for="(item1,index) in personalized" :key="'gd'+index">
                     <div>
-                        <router-link :to="{name:'songlistDet', params:{id:item.id}}"><img :src="item.picUrl" alt="" srcset=""></router-link>
+                        <router-link :to="{name:'songlistDet', params:{id:item1.id}}"><img :src="item1.picUrl" alt="" srcset=""></router-link>
                         <i class="el-icon-video-play" ></i>
-                        <span class="top-message">{{ item.copywriter }}</span>
-                        <span class="playcount"><i class="el-icon-headset"></i>{{ Math.ceil(item.playCount/10000) }}万</span>
+                        <span class="top-message">{{ item1.copywriter }}</span>
+                        <span class="playcount"><i class="el-icon-headset"></i>{{ Math.ceil(item1.playCount/10000) }}万</span>
                     </div>
-                    <p>{{ item.name }}</p>
+                    <p>{{ item1.name }}</p>
                 </li>
             </ul>
         </div>
         <div class="boxlists">
             <h3>独家放送<a href="javascript:void(0)">更多></a></h3>
             <ul class="nonewm dujia">
-                <li v-for="item in privatecontent" :key="item.id">
+                <li v-for="(item2,index) in privatecontent" :key="'dj'+index">
                     <div class="dujia">
-                        <router-link to=""><img :src="item.picUrl" alt="" srcset=""></router-link>
+                        <router-link to=""><img :src="item2.picUrl" alt="" srcset=""></router-link>
                     </div>
-                    <p>{{ item.name }}</p>
+                    <p>{{ item2.name }}</p>
                 </li>
             </ul>
         </div>
         <div class="boxlists">
             <h3>主播电台<a href="javascript:void(0)">更多></a></h3>
             <ul class="nonewm">
-                <li v-for="item in djprogram" :key="item.id">
+                <li v-for="(item3,index) in djprogram" :key="'dt'+index">
                     <div>
-                        <router-link to=""><img :src="item.picUrl" alt="" srcset=""></router-link>
-                         <span class="bottom-msg">{{ item.copywriter }}</span>
+                        <router-link to=""><img :src="item3.picUrl" alt="" srcset=""></router-link>
+                         <span class="bottom-msg">{{ item3.copywriter }}</span>
                     </div>
-                    <p>{{ item.name }}</p>   
+                    <p>{{ item3.name }}</p>   
                 </li>
             </ul>
         </div>
         <div class="boxlists">
             <h3>最新音乐<a href="javascript:void(0)">更多></a></h3>
             <ul class="isnewm">
-                <li v-for="(item,index) in newsong" :key="item.id">
+                <li v-for="(item4,index) in newsong" :key="'nm'+index">
                     <span class="list-id">{{ index>8?index+1:'0'+(index+1) }}</span>
-                    <div class="song-img"><img :src="item.picUrl" alt="" srcset=""><i class="el-icon-video-play newMPlayBtn"></i></div>
-                    <h5><span class="songname">{{ item.name }}<i>{{ item.song.alias[0] }}</i></span><router-link to="">{{ item.song.artists[0].name }}</router-link></h5>
+                    <div class="song-img"><img :src="item4.picUrl" alt="" srcset=""><i @click="playNewMusic(item4)" class="el-icon-video-play newMPlayBtn"></i></div>
+                    <h5><span class="songname">{{ item4.name }}<i>{{ item4.song.alias[0] }}</i></span><router-link to="">{{ item4.song.artists[0].name }}</router-link></h5>
                 </li>
-            </ul>
+            </ul>  
         </div>
     </div>
 </template>
@@ -77,7 +77,13 @@
                newsong:[]
             }
         },
-        mounted (){
+        methods:{
+            playNewMusic:function (songObj){
+                this.$store.commit('changeNowpSong',songObj);
+                this.$store.commit('changeNowpList',songObj);
+            }
+        },
+        created (){
             var that = this;
             getIndexBanner(0).then(function (response){
                 that.bannerLists = response.data.banners
@@ -86,7 +92,7 @@
             })
 
             getpersonalized(10).then(function (response){
-                console.log(response)
+              
                 that.personalized = response.data.result;
             }).catch(function (){
                 console.log(error)
@@ -108,7 +114,6 @@
 
             newsong().then(function (response){
                 var data = response.data.result;
-                console.log(data)
                 that.newsong = data;
             }).catch(function (){
                 console.log(error)

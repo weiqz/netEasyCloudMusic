@@ -38,7 +38,7 @@ export default {
         },
         methods: {
             handleClick(tab, event) {
-                window.console.log(tab, event);
+                
             }
         },
         created(){

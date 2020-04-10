@@ -11,8 +11,8 @@
     </div>
     <div class="head-user">
       <div class="user-name_headbox" @click="showLoginBox">
-          <img src="../images/user.png" alt="userpic" srcset="">
-          <span>未登录</span>
+          <img :src="user_pro.avatarUrl?user_pro.avatarUrl:'../images/user.png'" alt="userpic" srcset="">
+          <span>{{ user_pro.nickname?user_pro.nickname:未登录 }}</span>
           <i class="el-icon-caret-bottom"></i>
       </div>
       <span class="open-vip">开通VIP</span>
@@ -31,15 +31,22 @@
             :append-to-body=true
             :modal=false
             :visible.sync="dialogVisible"
-            width="340px">
-            <login/>
+            width="340px"
+            v-if="!user_pro"
+            >
+            <login :visible.sync="dialogVisible"/>
     </el-dialog>
+    <div class="userInfo_box" v-if="user_pro" v-show="dialogVisible">
+      <el-button type="warning" @click="logoutFn">退出</el-button>
+    </div>
   </div>
 </template>
 
 <script>
  const  { ipcRenderer }  = require('electron')
  import Login from './login.vue'
+ import { mapState } from 'vuex'
+ import { Logout } from '../getData/request.js'
 export default {
   name: 'Header',
   data (){
@@ -50,8 +57,16 @@ export default {
       dialogVisible:false
     }
   },
+  created(){
+    
+  },
   watch:{
     //'$route':'disRouteBtn'
+  },
+  computed:{
+    ...mapState([
+      'user_pro'
+    ])
   },
   components:{
     Login
@@ -68,6 +83,11 @@ export default {
       },
       changeWin(z){      
         ipcRenderer.send('changeWindow',z)
+      },
+      logoutFn(){
+        Logout().then(function (){
+
+        })
       }
     }
   }
@@ -82,6 +102,15 @@ export default {
     position: relative;
     top:13px;
     -webkit-app-region: no-drag;
+}
+.userInfo_box{
+  position: fixed;
+  top:70px;
+  left: 50%;
+  z-index: 99;
+  background: #fff;
+  width: 260px;
+  height: auto;
 }
 .user-name_headbox{
     display: inline-block;

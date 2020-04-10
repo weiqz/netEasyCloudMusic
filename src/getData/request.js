@@ -28,3 +28,12 @@ export const newsong = () => {
     let url = '/personalized/newsong'
     return request(url)
 }
+
+export const Login = function (loginObj){
+    let url = `/login/cellphone?phone=${loginObj.phone}&password=${loginObj.pass}`;
+    return request(url)
+}
+
+export const Logout = () => {
+    return request('/logout')
+}

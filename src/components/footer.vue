@@ -26,10 +26,11 @@
             <i class="ico-ci">词</i>
             <i class="el-icon-tickets"></i>
         </div>
-        <audio :src="nowplaySong.songUrl"
+        <audio :src="nowplaySong.id?`https://music.163.com/song/media/outer/url?id=${nowplaySong.id}.mp3`:null"
          @timeupdate="timeUpdate"
          @playing="playingFn"
          @pause="pauseFn"
+         @ended="nextsong"
          @canplay="canplayFn"
          @volumechange="volChange"
          autoplay="autoplay" ref="aud" style="display:none" id="audioDOM"></audio>
@@ -104,28 +105,34 @@ import { mapState } from 'vuex'
                this.totalTime = this.$refs.aud.duration;
             },
             prevsong (){
-
+                this.cutSong(-1)
             },
             startsong (){              
                 if(this.$refs.aud.paused){
                     this.$refs.aud.play()
                 }else{
                    this.$refs.aud.pause() 
-                }
-                
+                }              
             },
             nextsong (){
-                let index = this.nowplaySong.id;
-                index+=1;
-                if(index>this.nowplayList.length){
-                    index=1
-                }
-                this.$store.commit('changeNowpSong',this.nowplayList[index-1])
+                this.cutSong(1)
             },
             changeSongTime (e){
                 window.console.log(e.clientX+"--"+this.timeproBoxLeft);
                 let l = this.totalTime * ((e.clientX - this.timeproBoxLeft) / this.timeproWidth);
                 this.$refs.aud.currentTime =  l.toFixed(6);
+            },
+            cutSong(n){
+                var lists = this.nowplayList;
+                let sobj = this.nowplaySong;
+                var index = lists.indexOf(sobj);
+                index = index + n;
+                if(index>=lists.length){
+                    index=0
+                }else if(index<0){
+                    index=lists.length-1
+                }
+                this.$store.commit('changeNowpSong',lists[index])
             }
         }
     }

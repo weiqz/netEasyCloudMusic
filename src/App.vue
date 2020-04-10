@@ -34,12 +34,26 @@
 <script>
 import Header from './components/head.vue'
 import Footer from './components/footer.vue'
+import {newsong} from './getData/request.js'
 
 export default {
   name: 'app',
   data (){
     return {
     }
+  },
+  created (){
+    newsong().then(function (response){
+      var datas = response.data.result;
+      this.$store.commit('changeNowpSong',datas[0]);
+      this.$store.commit('replaceSongList',datas);
+    }.bind(this)).catch(function (){
+
+    });
+
+    var d = JSON.parse(localStorage.userPro);
+    this.$store.commit('updateUserPro',d);
+    console.log(d)
   },
   components: {
     Header,
