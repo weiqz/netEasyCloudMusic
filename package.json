@@ -57,7 +57,7 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.4.2",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "node-sass": "^4.13.0",
     "power-assert": "^1.6.1",
     "sass-loader": "^8.0.0",
